@@ -14,7 +14,7 @@ jobs:
     env:
         PC_USER: ${{ secrets.PC_USER }}
         PC_PASS: ${{ secrets.PC_PASS }}
-        PC_CONSOLE_URL: https://us-east1.cloud.twistlock.com/us-1-111573457
+        PC_CONSOLE_URL: ${{ secrets.PC_CONSOLE_URL }}
         IMAGE_NAME: store-dsvw
     steps:
     - uses: actions/checkout@v2
