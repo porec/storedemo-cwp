@@ -11,8 +11,12 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+        PC_USER: ${{ secrets.PC_USER }}
+        PC_PASS: ${{ secrets.PC_PASS }}
+        PC_CONSOLE_URL: ${{ secrets.PC_CONSOLE_URL }}
+        IMAGE_NAME: store-dsvw
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      run: docker build . --file Dockerfile --tag $IMAGE_NAME:$(date +%s)
