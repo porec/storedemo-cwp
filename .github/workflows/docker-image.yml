@@ -19,12 +19,12 @@ jobs:
         PRE_BUILD_GIT_SCAN_FLAG: 1
     steps:
     - uses: actions/checkout@v2
+    - name: Twistcli download
+      run: curl -s -k -u $PC_USER:$PC_PASS $PC_CONSOLE_URL/api/v1/util/twistcli -v -o twistcli;chmod +x twistcli
     - name: Scan Repo Dependencies
       run: bash ./scripts/reposcan.sh
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag $IMAGE_NAME
-    - name: Twistcli download
-      run: curl -s -k -u $PC_USER:$PC_PASS $PC_CONSOLE_URL/api/v1/util/twistcli -v -o twistcli;chmod +x twistcli
     - name: Scan Image
       run: ./twistcli images scan --u $PC_USER --p $PC_PASS --address $PC_CONSOLE_URL --details $IMAGE_NAME
 
