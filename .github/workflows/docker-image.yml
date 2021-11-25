@@ -23,8 +23,8 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Run Checkov for Dockerfile
-      id: checkov_docker
-      uses: bridgecrewio/checkov-action@master
+      id: bridgecrew_docker
+      uses: bridgecrewio/bridgecrew-action@master
       with:
         directory: .
         soft_fail: true # optional: do not return an error code if there are failed checks
@@ -32,6 +32,7 @@ jobs:
         quiet: true
         output_format: cli # optional: the output format, one of: cli, json, junitxml, github_failed_only
         log_level: WARNING # optional: set log level. Default WARNING
+        api-key: ${{ secrets.PC_API_KEY }}
 
     - name: Twistcli download
       run: curl -s -k -u $PC_USER:$PC_PASS $PC_CONSOLE_URL/api/v1/util/twistcli -v -o twistcli;chmod +x twistcli
@@ -49,7 +50,7 @@ jobs:
       run: sudo ./twistcli sandbox -u $PC_USER --p $PC_PASS --address $PC_CONSOLE_URL --output-file "sandbox.json" --analysis-duration 1m $IMAGE_NAME
 
     - name: Run Checkov for K8S Manifest file
-      id: Bridgecrew
+      id: bridgecrew_yaml
       uses: bridgecrewio/bridgecrew-action@master
       with:
         directory: ./deploy
