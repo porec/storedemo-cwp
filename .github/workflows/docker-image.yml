@@ -51,7 +51,7 @@ jobs:
       id: checkov_yaml
       uses: bridgecrewio/bridgecrew-action@master
       with:
-        directory: deploy/
+        directory: ./deploy
         soft_fail: true # optional: do not return an error code if there are failed checks
         framework: kubernetes # optional: (choose from 'cloudformation', 'terraform', 'kubernetes', 'serverless', 'arm', 'terraform_plan', 'helm', 'dockerfile', 'secrets', 'json', 'all')
         quiet: true
