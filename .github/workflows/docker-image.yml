@@ -46,7 +46,10 @@ jobs:
       
     - name: Sandbox image in Prisma Cloud
       run: sudo ./twistcli sandbox -u $PC_USER --p $PC_PASS --address $PC_CONSOLE_URL --output-file "sandbox.json" --analysis-duration 1m $IMAGE_NAME
-      
+   
+    - name: Set API ARL for Code Scanning
+      run: export PRISMA_API_URL="https://api.prismacloud.io"
+
     - name: Run Checkov for K8S Manifest file
       id: checkov_yaml
       uses: bridgecrewio/bridgecrew-action@master
