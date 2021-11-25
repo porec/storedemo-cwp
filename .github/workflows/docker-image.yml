@@ -24,7 +24,7 @@ jobs:
 
     - name: Run Checkov for Dockerfile
       id: bridgecrew_docker
-      uses: bridgecrewio/bridgecrew-action@master
+      uses: bridgecrewio/checkov-action@master
       with:
         directory: .
         soft_fail: true # optional: do not return an error code if there are failed checks
