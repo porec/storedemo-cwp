@@ -49,7 +49,7 @@ jobs:
       
     - name: Run Checkov for K8S Manifest file
       id: checkov_yaml
-      uses: bridgecrewio/checkov-action@master
+      uses: bridgecrewio/bridgecrew-action@master
       with:
         directory: ./deploy
         soft_fail: true # optional: do not return an error code if there are failed checks
