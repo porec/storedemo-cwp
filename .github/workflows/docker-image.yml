@@ -15,11 +15,11 @@ jobs:
         PC_USER: ${{ secrets.PC_USER }}
         PC_PASS: ${{ secrets.PC_PASS }}
         PC_CONSOLE_URL: ${{ secrets.PC_CONSOLE_URL }}
-        IMAGE_NAME: store-dsvw
+        IMAGE_NAME: porec/store-dsvw:latest
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $IMAGE_NAME:$(date +%s)
+      run: docker build . --file Dockerfile --tag $IMAGE_NAME
     - name: Twistcli download
       run: curl -s -k -u $PC_USER:$PC_PASS $PC_CONSOLE_URL/api/v1/util/twistcli -v -o twistcli;chmod +x twistcli
     - name: Scan Image
