@@ -16,6 +16,7 @@ jobs:
         PC_PASS: ${{ secrets.PC_PASS }}
         PC_CONSOLE_URL: ${{ secrets.PC_CONSOLE_URL }}
         IMAGE_NAME: porec/store-dsvw:latest
+        PRE_BUILD_GIT_SCAN_FLAG: 1
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
