@@ -20,3 +20,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag $IMAGE_NAME:$(date +%s)
+    - name: Twistcli download
+      run: curl -s -k -u $PC_USER:$PC_PASS "https://$PC_CONSOLE_URL/api/v1/util/twistcli" -v -o twistcli;chmod +x twistcli
+    - name: Scan Image
+      run: ./twistcli images scan --u $PC_USER --p $PC_PASS --address https://$PC_CONSOLE_URL --details $IMAGE_NAME:$(date +%s)
+
