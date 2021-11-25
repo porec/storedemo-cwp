@@ -12,9 +12,9 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-        PC_USER: ${{ secrets.PC_USER }}
-        PC_PASS: ${{ secrets.PC_PASS }}
-        PC_CONSOLE_URL: ${{ secrets.PC_CONSOLE_URL }}
+#       PC_USER: ${{ secrets.PC_USER }}
+#        PC_PASS: ${{ secrets.PC_PASS }}
+#        PC_CONSOLE_URL: ${{ secrets.PC_CONSOLE_URL }}
         IMAGE_NAME: store-dsvw
     steps:
     - uses: actions/checkout@v2
