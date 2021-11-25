@@ -17,7 +17,8 @@ jobs:
         PC_CONSOLE_URL: ${{ secrets.PC_CONSOLE_URL }}
         IMAGE_NAME: porec/store-dsvw:latest
         PRE_BUILD_GIT_SCAN_FLAG: true
- #       BC_API_KEY: ${{ secrets.BC_API_KEY }}
+        PRISMA_API_URL: https://api.prismacloud.io
+    
     steps:
     - uses: actions/checkout@v2
 
@@ -46,12 +47,9 @@ jobs:
       
     - name: Sandbox image in Prisma Cloud
       run: sudo ./twistcli sandbox -u $PC_USER --p $PC_PASS --address $PC_CONSOLE_URL --output-file "sandbox.json" --analysis-duration 1m $IMAGE_NAME
-   
-    - name: Set API ARL for Code Scanning
-      run: export PRISMA_API_URL="https://api.prismacloud.io"
 
     - name: Run Checkov for K8S Manifest file
-      id: checkov_yaml
+      id: Bridgecrew
       uses: bridgecrewio/bridgecrew-action@master
       with:
         directory: ./deploy
