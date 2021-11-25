@@ -19,12 +19,28 @@ jobs:
         PRE_BUILD_GIT_SCAN_FLAG: true
     steps:
     - uses: actions/checkout@v2
+    
     - name: Twistcli download
       run: curl -s -k -u $PC_USER:$PC_PASS $PC_CONSOLE_URL/api/v1/util/twistcli -v -o twistcli;chmod +x twistcli
+    
     - name: Scan Repo with Prisma Cloud
       run: bash ./scripts/reposcan.sh
+    
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag $IMAGE_NAME
+    
     - name: Scan Image with Prisma Cloud
       run: ./twistcli images scan --u $PC_USER --p $PC_PASS --address $PC_CONSOLE_URL --details $IMAGE_NAME
+      
+    - name: Run Checkov action
+      id: checkov
+      uses: bridgecrewio/checkov-action@master
+      with:
+        directory: ./deploy
+        soft_fail: true # optional: do not return an error code if there are failed checks
+        framework: kubernetes # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
+        quiet: true
+        output_format: github_failed_only # optional: the output format, one of: cli, json, junitxml, github_failed_only
+        log_level: WARNING # optional: set log level. Default WARNING
+    
 
