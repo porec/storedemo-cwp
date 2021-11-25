@@ -49,7 +49,6 @@ jobs:
       
     - name: Run Checkov for K8S Manifest file
       id: checkov_yaml
-      run: export PRISMA_CLOUD_URL="https://api.prismacloud.io"
       uses: bridgecrewio/bridgecrew-action@master
       with:
         directory: ./deploy
