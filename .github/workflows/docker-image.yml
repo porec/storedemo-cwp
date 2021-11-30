@@ -17,7 +17,7 @@ jobs:
         PC_CONSOLE_URL: ${{ secrets.PC_CONSOLE_URL }}
         IMAGE_NAME: porec/store-dsvw:latest
         PRE_BUILD_GIT_SCAN_FLAG: true
-        PRISMA_API_URL: https://api.prismacloud.io
+ #      PRISMA_API_URL: https://api.prismacloud.io
     
     steps:
     - uses: actions/checkout@v2
@@ -59,6 +59,6 @@ jobs:
         quiet: true
         output_format: cli # optional: the output format, one of: cli, json, junitxml, github_failed_only
         log_level: WARNING # optional: set log level. Default WARNING
-        api-key: ${{ secrets.PC_API_KEY }}
+        api-key: ${{ secrets.BC_API_KEY }}
     
 
