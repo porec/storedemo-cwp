@@ -32,7 +32,7 @@ jobs:
         quiet: true
         output_format: cli # optional: the output format, one of: cli, json, junitxml, github_failed_only
         log_level: WARNING # optional: set log level. Default WARNING
-        api-key: ${{ secrets.PC_API_KEY }}
+        api-key: ${{ secrets.BC_API_KEY }}
 
     - name: Twistcli download
       run: curl -s -k -u $PC_USER:$PC_PASS $PC_CONSOLE_URL/api/v1/util/twistcli -v -o twistcli;chmod +x twistcli
