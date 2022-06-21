@@ -52,9 +52,9 @@ jobs:
     - name: Scan image
       uses: PaloAltoNetworks/prisma-cloud-scan@v1
       with:
-       pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }} 
-       pcc_user: ${{ secrets.PCC_USER }}
-       pcc_pass: ${{ secrets.PCC_PASS }}
+       pcc_console_url: ${{ secrets.PC_CONSOLE_URL }} 
+       pcc_user: ${{ secrets.PC_USER }}
+       pcc_pass: ${{ secrets.PC_PASS }}
        image_name: ${{ env.IMAGE_NAME }}
     
     - name: Upload SARIF file
