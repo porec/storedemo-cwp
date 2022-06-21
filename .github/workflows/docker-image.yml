@@ -48,20 +48,12 @@ jobs:
       
     - name: Sandbox image in Prisma Cloud
       run: sudo ./twistcli sandbox -u $PC_USER --p $PC_PASS --address $PC_CONSOLE_URL --output-file "sandbox.json" --analysis-duration 1m $IMAGE_NAME
-    
-    - name: Scan image
-      uses: PaloAltoNetworks/prisma-cloud-scan@v1
-      with:
-       pcc_console_url: ${{ secrets.PC_CONSOLE_URL }} 
-       pcc_user: ${{ secrets.PC_USER }}
-       pcc_pass: ${{ secrets.PC_PASS }}
-       image_name: ${{ env.IMAGE_NAME }}
-    
-    - name: Upload SARIF file
-      if: ${{ always() }} 
-      uses: github/codeql-action/upload-sarif@v1
-      with:
-        sarif_file: pcc_scan_results.json
+        
+ #   - name: Upload SARIF file
+ #     if: ${{ always() }} 
+ #     uses: github/codeql-action/upload-sarif@v1
+ #     with:
+ #       sarif_file: pcc_scan_results.json
 
     - name: Run Checkov for K8S Manifest file
       id: bridgecrew_yaml
