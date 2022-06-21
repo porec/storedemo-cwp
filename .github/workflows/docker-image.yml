@@ -48,7 +48,15 @@ jobs:
       
     - name: Sandbox image in Prisma Cloud
       run: sudo ./twistcli sandbox -u $PC_USER --p $PC_PASS --address $PC_CONSOLE_URL --output-file "sandbox.json" --analysis-duration 1m $IMAGE_NAME
-
+    
+    - name: Scan image
+      uses: PaloAltoNetworks/prisma-cloud-scan@v1
+      with:
+       pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }} 
+       pcc_user: ${{ secrets.PCC_USER }}
+       pcc_pass: ${{ secrets.PCC_PASS }}
+       image_name: ${{ env.IMAGE_NAME }}
+    
     - name: Upload SARIF file
       if: ${{ always() }} 
       uses: github/codeql-action/upload-sarif@v1
