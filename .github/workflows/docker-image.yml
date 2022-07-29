@@ -44,7 +44,7 @@ jobs:
       run: docker build . --file Dockerfile --tag $IMAGE_NAME
       
     - name: Check label
-      run: docker image inspect --format '{{json .}}' $IMAGE_NAME | jq -r '. | {Labels: .Config.Labels}'
+      run: docker image inspect --format $IMAGE_NAME
     
     - name: Scan Image with Prisma Cloud
       run: ./twistcli images scan --u $PC_USER --p $PC_PASS --address $PC_CONSOLE_URL --details $IMAGE_NAME
