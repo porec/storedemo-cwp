@@ -44,19 +44,13 @@ jobs:
       run: docker build . --file Dockerfile --tag $IMAGE_NAME
       
     - name: Check label
-      run: docker image inspect --format $IMAGE_NAME
+      run: docker image inspect $IMAGE_NAME
     
     - name: Scan Image with Prisma Cloud
       run: ./twistcli images scan --u $PC_USER --p $PC_PASS --address $PC_CONSOLE_URL --details $IMAGE_NAME
       
     - name: Sandbox image in Prisma Cloud
       run: sudo ./twistcli sandbox -u $PC_USER --p $PC_PASS --address $PC_CONSOLE_URL --output-file "sandbox.json" --analysis-duration 1m $IMAGE_NAME
-        
- #   - name: Upload SARIF file
- #     if: ${{ always() }} 
- #     uses: github/codeql-action/upload-sarif@v1
- #     with:
- #       sarif_file: pcc_scan_results.json
 
     - name: Run Checkov for K8S Manifest file
       id: bridgecrew_yaml
