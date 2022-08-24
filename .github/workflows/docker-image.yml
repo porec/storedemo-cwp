@@ -42,12 +42,9 @@ jobs:
     
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag $IMAGE_NAME
-      
-    - name: Check label
-      run: docker image inspect $IMAGE_NAME
-      
-    - name: Check tags
-      run: bash ./scripts/tagcheck.sh
+            
+#    - name: Check tags
+#      run: bash ./scripts/tagcheck.sh
     
     - name: Scan Image with Prisma Cloud
       run: ./twistcli images scan --u $PC_USER --p $PC_PASS --address $PC_CONSOLE_URL --details $IMAGE_NAME
