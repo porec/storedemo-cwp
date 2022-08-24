@@ -16,6 +16,7 @@ jobs:
         PC_PASS: ${{ secrets.PC_PASS }}
         PC_CONSOLE_URL: ${{ secrets.PC_CONSOLE_URL }}
         IMAGE_NAME: porec/store-dsvw:latest
+        GITHUB_REPOSITORY: porec/storedemo-cwp
         PRE_BUILD_GIT_SCAN_FLAG: true
         PRISMA_API_URL: https://api.eu.prismacloud.io
     
