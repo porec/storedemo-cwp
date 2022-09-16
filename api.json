@@ -1,0 +1,1925 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is the api used by both the Maersk Web frontend and flow to get/set data on the backend.",
+    "version": "1.0",
+    "title": "Maersk PoC API",
+    "license": {
+      "name": "MIT",
+      "url": "http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT"
+    }
+  },
+  "host": "staging.att-assetinsight.com",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/containers/briefs": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Get Briefs",
+        "description": "List all active/visible containers for the current user (unpaginated)",
+        "operationId": "Get Briefs",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "container_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "tracking_device_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "dry_container",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "customer_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "shipping_status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ship_date",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "required": [
+                "containers"
+              ],
+              "properties": {
+                "containers": {
+                  "$ref": "#/definitions/Container"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/containers/imeis": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Get IMEIs",
+        "description": "List all container ids",
+        "operationId": "Get IMEIs",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Imei"
+            }
+          }
+        }
+      }
+    },
+    "/v1/containers/{external_id}/dry_container": {
+      "put": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Update dry container number",
+        "description": "Admin only endpoint",
+        "operationId": "Update dry container number",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "external_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/body"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Container"
+            }
+          },
+          "422": {
+            "description": "Error, duplicated dry_container",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "container_id": {
+                  "type": "string",
+                  "description": "Container external_id"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/containers/{external_id}/customer_id": {
+      "put": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Link container to customer_id",
+        "description": "Admin only endpoint",
+        "operationId": "Link container to customer_id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "external_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/body_1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Container"
+            }
+          },
+          "422": {
+            "description": "Failure, already associated",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/containers/{external_id}/notifications": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "List container notifications",
+        "operationId": "List container notifications",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "external_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/V1ContainersNotificationsResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Update notifications",
+        "description": "Admin|User only endpoint",
+        "operationId": "Update notifications",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "external_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/V1ContainersNotificationsResponse"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The notification has been updated"
+          }
+        }
+      }
+    },
+    "/v1/containers/{external_id}/sensors/{sensor_id}/limits": {
+      "put": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Update notifications",
+        "description": "Admin|User only endpoint",
+        "operationId": "Update notifications1",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "external_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "sensor_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/body_2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/containers/{external_id}": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Get Container data",
+        "description": "Show container data",
+        "operationId": "Get Container data",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "external_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Container"
+            }
+          }
+        }
+      }
+    },
+    "/v1/containers/{external_id}/extended_location_data": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Get Container extended location data",
+        "description": "Show container extended location data",
+        "operationId": "Get Container extended location data",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "external_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/inline_response_200"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/containers": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "List Containers",
+        "description": "Search for containers following certain criteria.\nThe container objects returned in this endpoint has full container data,\nwhile the container objects included in Containers Brief API only include partial data.\n",
+        "operationId": "List Containers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "dir",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "estimated_arrival",
+              "status",
+              "ship_date"
+            ]
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "container_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "tracking_device_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "dry_container",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "customer_id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "shipping_status",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ship_date",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "properties": {
+                "containers": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Container"
+                  }
+                },
+                "paging": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "integer",
+                      "format": "int32"
+                    },
+                    "pages": {
+                      "type": "integer",
+                      "format": "int32"
+                    },
+                    "limit": {
+                      "type": "integer",
+                      "format": "int32"
+                    },
+                    "current_page": {
+                      "type": "integer",
+                      "format": "int32"
+                    }
+                  },
+                  "required": [
+                    "current_page",
+                    "limit",
+                    "pages",
+                    "total"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/customers/{customer_id}/associate_containers": {
+      "put": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Associate containers",
+        "description": "Admin only endpoint",
+        "operationId": "Associate containers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "customer_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/body_3"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "422": {
+            "description": "Already associated containers",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "dry_container_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/customers": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Get customers",
+        "description": "Admin only endpoint",
+        "operationId": "Get customers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Customer"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Create Customer",
+        "description": "Admin only endpoint",
+        "operationId": "Create Customer",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/body_4"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Customer"
+            }
+          }
+        }
+      }
+    },
+    "/v1/port": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Find port",
+        "description": "**NOTE**: Open endpoint does not require authentication",
+        "operationId": "Find port",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "required": [
+                "code",
+                "name"
+              ],
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If query does not correspond to any known port"
+          }
+        }
+      }
+    },
+    "/v1/ports": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "description": "List all ports",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "required": [
+                "code",
+                "id",
+                "name",
+                "points"
+              ],
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "points": {
+                  "type": "array",
+                  "example": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      1,
+                      1
+                    ]
+                  ],
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ports/{id}": {
+      "put": {
+        "tags": [
+          "v1"
+        ],
+        "description": "Update port points",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/body_5"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource sucessfully updated"
+          },
+          "422": {
+            "description": "Invalid points data"
+          }
+        }
+      }
+    },
+    "/v1/users/{id}": {
+      "put": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Edit user",
+        "description": "Admin only endpoint",
+        "operationId": "Edit user",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/V1UsersRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Customer"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Delete user",
+        "description": "Admin only endpoint",
+        "operationId": "Delete user",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/users/signin": {
+      "post": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Signin",
+        "operationId": "Signin",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/body_6"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "required": [
+                "token"
+              ],
+              "properties": {
+                "token": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/users/change_password": {
+      "post": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Change password",
+        "description": "**NOTE:** User must be signed in",
+        "operationId": "Change password",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/body_7"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/users/me": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Get current user",
+        "description": "**NOTE:** User must be signed in",
+        "operationId": "Get current user",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Update current user",
+        "description": "**NOTE:** User must be signed in",
+        "operationId": "Update current user",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/body_8"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/v1/users/metadata": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Get Metadata",
+        "description": "**NOTE:** User must be signed in",
+        "operationId": "Get Metadata",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Metadata"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Updata Metadata",
+        "description": "**NOTE:** User must be signed in",
+        "operationId": "Updata Metadata",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Metadata"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Metadata"
+            }
+          }
+        }
+      }
+    },
+    "/v1/users": {
+      "get": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Get user list",
+        "description": "Admin only endpoint",
+        "operationId": "Get user list",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Create User",
+        "description": "Admin only endpoint",
+        "operationId": "Create User",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/V1UsersRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Customer"
+            }
+          }
+        }
+      }
+    },
+    "/v1/{user_signup_token}/signup": {
+      "post": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Signup",
+        "description": "**NOTE:** This endpoint always creates admin users",
+        "operationId": "Signup",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authentication",
+            "in": "header",
+            "description": "Header passed to authenticate the user making the call",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user_signup_token",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/body_9"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/xirgo/{xirgo_upload_token}/upload": {
+      "post": {
+        "tags": [
+          "v1"
+        ],
+        "summary": "Upload Xirgo data",
+        "description": "Upload a new Xirgo message.\nThis will trigger some side effects like\n1. Store the message in the DB\n2. Create new container for new serials\n3. Update container sensors\n",
+        "operationId": "Upload Xirgo data",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "xirgo_upload_token",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/body_10"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "required": [
+                "status"
+              ],
+              "properties": {
+                "status": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Location": {
+      "type": "object",
+      "required": [
+        "latitude",
+        "longitude",
+        "timestamp"
+      ],
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "title": "Location"
+    },
+    "Customer": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "Customer"
+    },
+    "Sensor": {
+      "type": "object",
+      "required": [
+        "absolute_max",
+        "absolute_min",
+        "editable_max",
+        "editable_min",
+        "last_update",
+        "max",
+        "min",
+        "name",
+        "out_of_range_lower_text",
+        "out_of_range_upper_text",
+        "status",
+        "type",
+        "unit",
+        "value"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "editable_max": {
+          "type": "boolean"
+        },
+        "editable_min": {
+          "type": "boolean"
+        },
+        "max": {
+          "type": "number",
+          "format": "double"
+        },
+        "min": {
+          "type": "number",
+          "format": "double"
+        },
+        "status": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number",
+          "format": "double"
+        },
+        "last_update": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "type": {
+          "type": "string"
+        },
+        "absolute_max": {
+          "type": "number",
+          "format": "double"
+        },
+        "absolute_min": {
+          "type": "number",
+          "format": "double"
+        },
+        "out_of_range_upper_text": {
+          "type": "string"
+        },
+        "out_of_range_lower_text": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        }
+      },
+      "title": "Sensor"
+    },
+    "Container": {
+      "type": "object",
+      "required": [
+        "current_location",
+        "customer_id",
+        "dry_container",
+        "estimated_arrival",
+        "id",
+        "locations",
+        "mode",
+        "sensors",
+        "shipping_status",
+        "status",
+        "tracking_device"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "status": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string"
+        },
+        "estimated_arrival": {
+          "type": "string"
+        },
+        "current_location": {
+          "$ref": "#/definitions/Location"
+        },
+        "shipping_status": {
+          "$ref": "#/definitions/ShippingStatus"
+        },
+        "locations": {
+          "$ref": "#/definitions/Location"
+        },
+        "tracking_device": {
+          "$ref": "#/definitions/TrackingDevice"
+        },
+        "dry_container": {
+          "type": "string"
+        },
+        "sensors": {
+          "$ref": "#/definitions/Sensor"
+        },
+        "customer_id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "Container"
+    },
+    "ShippingStatus": {
+      "type": "object",
+      "required": [
+        "location_id",
+        "location_name",
+        "location_status"
+      ],
+      "properties": {
+        "location_status": {
+          "type": "string"
+        },
+        "location_name": {
+          "type": "string"
+        },
+        "location_id": {
+          "type": "string"
+        }
+      },
+      "title": "shipping_status"
+    },
+    "TrackingDevice": {
+      "type": "object",
+      "required": [
+        "battery_percent",
+        "cell_signal",
+        "tracking_device_id"
+      ],
+      "properties": {
+        "battery_percent": {
+          "type": "string"
+        },
+        "cell_signal": {
+          "type": "string"
+        },
+        "tracking_device_id": {
+          "type": "string"
+        }
+      },
+      "title": "tracking_device"
+    },
+    "Imei": {
+      "type": "object",
+      "required": [
+        "dry_container",
+        "id",
+        "imei"
+      ],
+      "properties": {
+        "imei": {
+          "type": "string"
+        },
+        "dry_container": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      },
+      "title": "Imei"
+    },
+    "User": {
+      "type": "object",
+      "required": [
+        "cellphone",
+        "customer",
+        "email",
+        "first_name",
+        "id",
+        "last_name",
+        "role"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "email": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "cellphone": {
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/definitions/RoleEnum"
+        },
+        "customer": {
+          "type": "string"
+        }
+      },
+      "title": "User"
+    },
+    "RoleEnum": {
+      "type": "string",
+      "title": "roleEnum",
+      "enum": [
+        "admin",
+        "user",
+        "guest",
+        "customer"
+      ]
+    },
+    "Metadata": {
+      "type": "object",
+      "required": [
+        "metadata"
+      ],
+      "properties": {
+        "metadata": {
+          "type": "string"
+        }
+      },
+      "title": "Metadata"
+    },
+    "DirEnum": {
+      "type": "string",
+      "title": "dirEnum",
+      "enum": [
+        "asc",
+        "desc"
+      ]
+    },
+    "SortEnum": {
+      "type": "string",
+      "title": "sortEnum",
+      "enum": [
+        "estimated_arrival",
+        "status",
+        "ship_date"
+      ]
+    },
+    "V1UsersRequest": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "password_confirmation": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "cellphone": {
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/definitions/RoleEnum"
+        },
+        "customer_id": {
+          "type": "string"
+        }
+      },
+      "title": "V1 Users request"
+    },
+    "V1ContainersNotificationsResponse": {
+      "type": "object",
+      "required": [
+        "email",
+        "text"
+      ],
+      "properties": {
+        "email": {
+          "type": "boolean"
+        },
+        "text": {
+          "type": "boolean"
+        }
+      },
+      "title": "V1 Containers Notifications response"
+    },
+    "body": {
+      "required": [
+        "dry_container"
+      ],
+      "properties": {
+        "dry_container": {
+          "type": "string"
+        }
+      }
+    },
+    "body_1": {
+      "required": [
+        "customer_id"
+      ],
+      "properties": {
+        "customer_id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "body_2": {
+      "required": [
+        "max",
+        "min"
+      ],
+      "properties": {
+        "min": {
+          "type": "number",
+          "format": "double"
+        },
+        "max": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "inline_response_200": {
+      "type": "object",
+      "required": [
+        "location",
+        "name",
+        "status",
+        "timestamp"
+      ],
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "body_3": {
+      "required": [
+        "dry_container_ids"
+      ],
+      "properties": {
+        "dry_container_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "body_4": {
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "body_5": {
+      "required": [
+        "points"
+      ],
+      "properties": {
+        "points": {
+          "type": "array",
+          "example": [
+            0,
+            0,
+            1,
+            1,
+            2,
+            0
+          ],
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "body_6": {
+      "required": [
+        "email",
+        "password"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "body_7": {
+      "required": [
+        "old_password",
+        "password",
+        "password_confirmation"
+      ],
+      "properties": {
+        "old_password": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "password_confirmation": {
+          "type": "string"
+        }
+      }
+    },
+    "body_8": {
+      "required": [
+        "new_password",
+        "new_password_confirmation",
+        "old_password"
+      ],
+      "properties": {
+        "old_password": {
+          "type": "string"
+        },
+        "new_password": {
+          "type": "string"
+        },
+        "new_password_confirmation": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "cellphone": {
+          "type": "string"
+        }
+      }
+    },
+    "body_9": {
+      "required": [
+        "email",
+        "password"
+      ],
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "cellphone": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        }
+      }
+    },
+    "body_10": {
+      "required": [
+        "serial_num"
+      ],
+      "properties": {
+        "serial_num": {
+          "type": "string"
+        },
+        "Code": {
+          "type": "string"
+        },
+        "Date": {
+          "type": "string"
+        },
+        "Time": {
+          "type": "string"
+        },
+        "Latitude": {
+          "type": "string"
+        },
+        "Longitude": {
+          "type": "string"
+        },
+        "Speed": {
+          "type": "string"
+        },
+        "Heading": {
+          "type": "string"
+        },
+        "Satellites": {
+          "type": "string"
+        },
+        "Miles": {
+          "type": "string"
+        },
+        "Battery": {
+          "type": "string"
+        },
+        "GSMstrength": {
+          "type": "string"
+        },
+        "GPSstatus": {
+          "type": "string"
+        },
+        "GPSaccuracy": {
+          "type": "string"
+        },
+        "ExternalVoltage": {
+          "type": "string"
+        },
+        "BackupVoltage": {
+          "type": "string"
+        },
+        "Powerup": {
+          "type": "string"
+        },
+        "AccelerometerX": {
+          "type": "string"
+        },
+        "AccelerometerY": {
+          "type": "string"
+        },
+        "AccelerometerZ": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "V1AuthHeader": {
+      "name": "Authentication",
+      "in": "header",
+      "description": "Header passed to authenticate the user making the call",
+      "required": true,
+      "type": "string"
+    }
+  }
+}
